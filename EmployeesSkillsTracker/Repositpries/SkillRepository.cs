@@ -1,12 +1,13 @@
 ﻿using EmployeesSkillsTracker.DbContexts;
 using EmployeesSkillsTracker.Entities;
+using EmployeesSkillsTracker.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EmployeesSkillsTracker.Services
+namespace EmployeesSkillsTracker.Repositories
 {
     public class SkillRepository : ISkillRepository
     {
