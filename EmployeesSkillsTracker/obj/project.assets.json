@@ -9428,19 +9428,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Rana\\.nuget\\packages\\": {}
+    "C:\\Users\\Muhammad\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Work\\Documents\\Net\\EmployeesSkillsTracker\\EmployeesSkillsTracker\\EmployeesSkillsTracker.csproj",
+      "projectUniqueName": "E:\\Misc\\Work\\Projects\\EmployeeSkills\\EmployeeSkills\\EmployeesSkillsTracker\\EmployeesSkillsTracker.csproj",
       "projectName": "EmployeesSkillsTracker",
-      "projectPath": "D:\\Work\\Documents\\Net\\EmployeesSkillsTracker\\EmployeesSkillsTracker\\EmployeesSkillsTracker.csproj",
-      "packagesPath": "C:\\Users\\Rana\\.nuget\\packages\\",
-      "outputPath": "D:\\Work\\Documents\\Net\\EmployeesSkillsTracker\\EmployeesSkillsTracker\\obj\\",
+      "projectPath": "E:\\Misc\\Work\\Projects\\EmployeeSkills\\EmployeeSkills\\EmployeesSkillsTracker\\EmployeesSkillsTracker.csproj",
+      "packagesPath": "C:\\Users\\Muhammad\\.nuget\\packages\\",
+      "outputPath": "E:\\Misc\\Work\\Projects\\EmployeeSkills\\EmployeeSkills\\EmployeesSkillsTracker\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Rana\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Muhammad\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -9452,6 +9452,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -9463,6 +9464,7 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
@@ -9513,7 +9515,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
