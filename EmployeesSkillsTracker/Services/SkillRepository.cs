@@ -22,6 +22,11 @@ namespace EmployeesSkillsTracker.Services
              return _appDbContext.Skills;
         }
 
+        public bool SkillExists(int skillId)
+        {
+            return _appDbContext.Skills.Any(s => s.SkillID == skillId);
+        }
+
         public Skill GetSkillByID(int skillId)
         {
             return _appDbContext.Skills.FirstOrDefault(s => s.SkillID == skillId);

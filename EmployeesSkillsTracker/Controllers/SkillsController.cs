@@ -15,13 +15,11 @@ namespace EmployeesSkillsTracker.Controllers
     public class SkillsController : ControllerBase
     {
         private readonly ISkillRepository _skillRepository;
-        private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
 
-        public SkillsController(ISkillRepository skillRepository, IEmployeeRepository employeeRepository, IMapper mapper)
+        public SkillsController(ISkillRepository skillRepository, IMapper mapper)
         {
             _skillRepository = skillRepository;
-            _employeeRepository = employeeRepository;
             _mapper = mapper;
         }
 
@@ -67,34 +65,21 @@ namespace EmployeesSkillsTracker.Controllers
         }
 
         [HttpPut("api/skills/{skillId}")]
-        public ActionResult UpdateSkill(int skillId, SkillDto skill)
+        public ActionResult UpdateSkill(int skillId, Skill skill)
         {
-            if (skill == null || skillId != skill.SkillID)
+            if (skill == null)
+                return BadRequest();
+
+            if (!_skillRepository.SkillExists(skillId))
                 return NotFound();
+
+            _skillRepository.UpdateSkill(skill);
+            _skillRepository.Save();
 
             var skillEntity = _skillRepository.GetSkillByID(skillId);
 
-            if (skillEntity == null)
-                return NotFound();
-
-            _mapper.Map(skill, skillEntity);
-
-            _skillRepository.UpdateSkill(skillEntity);
-
-            _skillRepository.Save();
-
-            return NoContent();
+            return Ok(skillEntity);
         }
-
-        /*
-        [HttpPost("api/employees/{employeeId}/skills")]
-        public ActionResult<SkillDto> CreateSkillForEmployee(Skill skill, int employeeId)
-        {
-            if (_employeeRepository.GetEmployeeByID(employeeId) == null)
-                return NotFound();
-
-
-        }*/
 
         [HttpDelete("api/skills/{skillId}")]
         public ActionResult DeleteSkill(int skillId)

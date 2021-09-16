@@ -10,6 +10,8 @@ namespace EmployeesSkillsTracker.Services
     {
         public IEnumerable<Skill> GetSkills();
 
+        public bool SkillExists(int skillId);
+
         public Skill GetSkillByID(int skillId);
 
         public Skill GetSkillEmployees(int skillId);

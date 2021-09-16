@@ -15,13 +15,11 @@ namespace EmployeesSkillsTracker.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly ISkillRepository _skillRepository;
         private readonly IMapper _mapper;
 
-        public EmployeesController(IEmployeeRepository employeeRepository, ISkillRepository skillRepository, IMapper mapper)
+        public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper)
         {
             _employeeRepository = employeeRepository;
-            _skillRepository = skillRepository;
             _mapper = mapper;
         }
 
@@ -110,8 +108,6 @@ namespace EmployeesSkillsTracker.Controllers
 
             var updatedEmployee = _employeeRepository.AddEmployeeSkills(employee, employeeSkills);
             _employeeRepository.Save();
-
-
 
             return CreatedAtRoute("GetEmployeeSkills", new { employeeId = updatedEmployee.EmployeeID }, updatedEmployee);
         }
