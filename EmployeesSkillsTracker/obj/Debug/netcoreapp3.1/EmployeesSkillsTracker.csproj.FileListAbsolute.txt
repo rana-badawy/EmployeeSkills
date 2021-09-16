@@ -166,8 +166,6 @@ D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\ne
 D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll
 D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll
 D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll
-D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\obj\Debug\netcoreapp3.1\EmployeesSkillsTracker.csproj.CoreCompileInputs.cache
-D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\obj\Debug\netcoreapp3.1\EmployeesSkillsTracker.MvcApplicationPartsAssemblyInfo.cache
 D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Razor.Language.dll
 D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.dll
 D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.dll
@@ -509,3 +507,11 @@ E:\Misc\Work\Projects\EmployeeSkills\EmployeeSkills\EmployeesSkillsTracker\obj\D
 E:\Misc\Work\Projects\EmployeeSkills\EmployeeSkills\EmployeesSkillsTracker\obj\Debug\netcoreapp3.1\EmployeesSkillsTracker.dll
 E:\Misc\Work\Projects\EmployeeSkills\EmployeeSkills\EmployeesSkillsTracker\obj\Debug\netcoreapp3.1\EmployeesSkillsTracker.pdb
 E:\Misc\Work\Projects\EmployeeSkills\EmployeeSkills\EmployeesSkillsTracker\obj\Debug\netcoreapp3.1\EmployeesSkillsTracker.genruntimeconfig.cache
+D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.Internal.dll
+D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
+D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
+D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\obj\Debug\netcoreapp3.1\EmployeesSkillsTracker.csproj.CoreCompileInputs.cache
+D:\Work\Documents\Net\EmployeesSkillsTracker\EmployeesSkillsTracker\obj\Debug\netcoreapp3.1\EmployeesSkillsTracker.MvcApplicationPartsAssemblyInfo.cache

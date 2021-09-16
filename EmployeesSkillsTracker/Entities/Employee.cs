@@ -14,6 +14,7 @@ namespace EmployeesSkillsTracker.Entities
 
         [Required]
         public string FirstName { get; set; }
+
         [Required]
         public string LastName { get; set; }
 
@@ -24,17 +25,14 @@ namespace EmployeesSkillsTracker.Entities
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         [JsonIgnore]
         public string Password { get; set; }
 
 
         public int Salary { get; set; }
 
-        [Required]
         public string Role { get; set; }
 
-        [Required]
         public double YearsOfExperience { get; set; }
 
         public virtual List<EmployeeSkill> Skills { get; set; }
