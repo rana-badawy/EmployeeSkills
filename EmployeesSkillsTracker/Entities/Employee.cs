@@ -17,7 +17,7 @@ namespace EmployeesSkillsTracker.Entities
         [Required]
         public string LastName { get; set; }
 
-        [Required]
+
         public string PhoneNumber { get; set; }
 
         [Required]
@@ -28,7 +28,7 @@ namespace EmployeesSkillsTracker.Entities
         [JsonIgnore]
         public string Password { get; set; }
 
-        [Required]
+
         public int Salary { get; set; }
 
         [Required]

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "sVmbQSCuq0khQHnHUKN9rkcpGRSQTk2UThwiOl+YLEbC0zZLQ6DC95YuS8YtYK6VbxGWCrXaSEXbt5nRdKZ59g==",
+  "dgSpecHash": "Cvn2tCw0okb90Paj4/0YX4IuVYV0qk/hFsLonoe6R/ecXLjQrIjauL2pTiNgk2xkc1ikfsaregbo2LCbmzxatQ==",
   "success": true,
   "projectFilePath": "E:\\Misc\\Work\\Projects\\EmployeeSkills\\EmployeeSkills\\EmployeesSkillsTracker\\EmployeesSkillsTracker.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\Muhammad\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\8.1.1\\automapper.extensions.microsoft.dependencyinjection.8.1.1.nupkg.sha512",
     "C:\\Users\\Muhammad\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",
     "C:\\Users\\Muhammad\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\Muhammad\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.19\\microsoft.aspnetcore.authentication.jwtbearer.3.1.19.nupkg.sha512",
     "C:\\Users\\Muhammad\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\Muhammad\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\3.1.18\\microsoft.aspnetcore.jsonpatch.3.1.18.nupkg.sha512",
     "C:\\Users\\Muhammad\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\3.1.18\\microsoft.aspnetcore.mvc.newtonsoftjson.3.1.18.nupkg.sha512",
