@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,6 +69,11 @@ namespace EmployeesSkillsTracker
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Keys:Access"]))
                     };
                 });
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy(nameof(LoggedInEmployeeAccess), policy => policy.RequireClaim(JwtRegisteredClaimNames.Sub));
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
