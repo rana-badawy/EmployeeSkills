@@ -79,5 +79,26 @@ namespace EmployeesSkillsTracker.Services
             return new TokenValidationResponse(user);
         }
 
+
+        public ResponseDto<Employee> LoginEmployee(string username, string password)
+        {
+            
+
+            var user = _employeeRepository.GetEmployeeByUsername(username) ?? throw new UnauthorizedAccessException();
+            // Password Verification
+            var verified = _jWTHelper.VerifyPassword(user.Password, password);
+            if (!verified)
+            {
+                throw new AccessViolationException();
+            }
+
+            //Generate Token
+            var accessToken = GenerateAccessToken(user);
+            var refreshToken = GenerateRefreshToken(user);
+
+            return new ResponseDto<Employee> { AccessToken = accessToken, RefreshToken = refreshToken, responseObject = user };
+
+        }
+
     }
 }

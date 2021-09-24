@@ -8,5 +8,6 @@ namespace EmployeesSkillsTracker.Helpers
         string GenerateJSONWebToken(IEnumerable<Claim> claims, string tokenType);
         IEnumerable<Claim> ValidateJWTToken(string token, string tokenType);
         string CreatePassword(string Password);
+        bool VerifyPassword(string hashedPassword, string providedPassword);
     }
 }

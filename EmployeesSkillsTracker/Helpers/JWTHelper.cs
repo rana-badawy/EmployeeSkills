@@ -73,6 +73,32 @@ namespace EmployeesSkillsTracker.Helpers
         {
             return Convert.ToBase64String(HashPassword(Password, _rng));
         }
+        public virtual bool VerifyPassword(string hashedPassword, string providedPassword)
+        {
+            if (hashedPassword == null)
+            {
+                throw new ArgumentNullException(nameof(hashedPassword));
+            }
+            if (providedPassword == null)
+            {
+                throw new ArgumentNullException(nameof(providedPassword));
+            }
+
+            byte[] decodedHashedPassword = Convert.FromBase64String(hashedPassword);
+
+            // read the format marker from the hashed password
+            if (decodedHashedPassword.Length == 0)
+            {
+                return false;
+            }
+            int embeddedIterCount;
+            if (VerifyHashedPassword(decodedHashedPassword, providedPassword, out embeddedIterCount))
+            {
+                // If this hasher was configured with a higher iteration count, change the entry now.
+                return true;
+            }
+            return false;
+        }
         private byte[] HashPassword(string password, RandomNumberGenerator rng)
         {
             return HashPassword(password, rng,

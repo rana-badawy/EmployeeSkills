@@ -12,5 +12,6 @@ namespace EmployeesSkillsTracker.Services
         TokenResponseDto ValidateRefreshToken(string refreshToken);
         TokenValidationResponse ValidateUserClaimsFromToken(IEnumerable<Claim> claims);
         TokenValidationResponse ValidateUserClaimsFromContext();
+        ResponseDto<Employee> LoginEmployee(string username, string password);
     }
 }

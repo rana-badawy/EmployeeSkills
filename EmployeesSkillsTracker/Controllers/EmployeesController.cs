@@ -173,9 +173,18 @@ namespace EmployeesSkillsTracker.Controllers
 
         }
 
+        [HttpPost("api/login")]
+        public IActionResult Login([FromForm] string username, [FromForm] string password)
+        {
+            var response = _authServices.LoginEmployee(username, password);
 
 
-        
+            return Ok(response);
+        }
+
+
+
+
         //private static string RandomString()
         //{
         //    Random random = new Random();

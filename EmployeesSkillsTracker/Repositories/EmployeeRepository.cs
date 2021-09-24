@@ -32,6 +32,10 @@ namespace EmployeesSkillsTracker.Repositories
         {
             return _appDbContext.Employees.AsNoTracking().FirstOrDefault(e => e.EmployeeID == employeeId);
         }
+        public Employee GetEmployeeByUsername(string username)
+        {
+            return _appDbContext.Employees.AsNoTracking().FirstOrDefault(e => e.Username == username);
+        }
 
         public Employee GetEmployeeSkills(int employeeId)
         {

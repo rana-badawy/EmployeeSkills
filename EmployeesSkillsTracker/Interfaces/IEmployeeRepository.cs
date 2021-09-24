@@ -13,6 +13,7 @@ namespace EmployeesSkillsTracker.Interfaces
         public bool EmployeeExists(int employeeId);
 
         public Employee GetEmployeeByID(int employeeID);
+        public Employee GetEmployeeByUsername(string username);
 
         public Employee GetEmployeeSkills(int employeeId);
 
