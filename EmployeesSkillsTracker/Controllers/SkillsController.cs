@@ -15,18 +15,16 @@ namespace EmployeesSkillsTracker.Controllers
     public class SkillsController : ControllerBase
     {
         private readonly ISkillRepository _skillRepository;
-        private readonly IMapper _mapper;
 
-        public SkillsController(ISkillRepository skillRepository, IMapper mapper)
+        public SkillsController(ISkillRepository skillRepository)
         {
             _skillRepository = skillRepository;
-            _mapper = mapper;
         }
 
         [HttpGet("api/skills")]
-        public ActionResult<IEnumerable<SkillDto>> GetSkills()
+        public ActionResult<IEnumerable<Skill>> GetSkills()
         {
-            return Ok(_mapper.Map<IEnumerable<SkillDto>>(_skillRepository.GetSkills()));
+            return Ok(_skillRepository.GetSkills());
         }
 
         [HttpGet("api/skills/{skillId}", Name = "GetSkill")]
@@ -37,7 +35,7 @@ namespace EmployeesSkillsTracker.Controllers
             if (skill == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<SkillDto>(skill));
+            return Ok(skill);
         }
 
         [HttpGet("api/skills/{skillId}/employees")]
@@ -52,16 +50,12 @@ namespace EmployeesSkillsTracker.Controllers
         }
 
         [HttpPost("api/skills")]
-        public ActionResult<SkillDto> CreateSkill(Skill skill)
+        public ActionResult<Skill> CreateSkill(Skill skill)
         {
-            var skillEntity = _mapper.Map<Skill>(skill);
-
-            _skillRepository.CreateSkill(skillEntity);
+            _skillRepository.CreateSkill(skill);
             _skillRepository.Save();
 
-            var createdSkill = _mapper.Map<SkillDto>(skillEntity);
-
-            return CreatedAtRoute("GetSkill", new { skillId = createdSkill.SkillID }, createdSkill);
+            return CreatedAtRoute("GetSkill", new { skillId = skill.SkillID }, skill);
         }
 
         [HttpPut("api/skills/{skillId}")]
