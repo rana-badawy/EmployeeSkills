@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeesSkillsTracker.DbContexts;
+using EmployeesSkillsTracker.Entities;
+using EmployeesSkillsTracker.Helpers;
 using EmployeesSkillsTracker.Interfaces;
 using EmployeesSkillsTracker.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -37,8 +40,11 @@ namespace EmployeesSkillsTracker
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            services.Configure<JWTSettings>(Configuration.GetSection("JWTSettings"));
+
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ISkillRepository, SkillRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

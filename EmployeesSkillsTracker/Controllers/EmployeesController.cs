@@ -4,10 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EmployeesSkillsTracker.Entities;
+using EmployeesSkillsTracker.Helpers;
 using EmployeesSkillsTracker.Interfaces;
 using EmployeesSkillsTracker.Models;
+using JWT;
+using JWT.Algorithms;
+using JWT.Serializers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace EmployeesSkillsTracker.Controllers
 {
@@ -16,11 +22,18 @@ namespace EmployeesSkillsTracker.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly JWTSettings _options;
 
-        public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper)
+        public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper, UserManager<IdentityUser> userManager, 
+                                   SignInManager<IdentityUser> signInManager, IOptions<JWTSettings> optionsAccessor)
         {
             _employeeRepository = employeeRepository;
             _mapper = mapper;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _options = optionsAccessor.Value;   
         }
 
         [HttpGet("api/employees")]
@@ -53,8 +66,26 @@ namespace EmployeesSkillsTracker.Controllers
         }
 
         [HttpPost("api/employees")]
-        public ActionResult<EmployeeDto> CreateEmployee(EmployeeDto employee)
+        public async Task<ActionResult<EmployeeDto>> CreateEmployee(Employee employee)
         {
+            if (ModelState.IsValid)
+            {
+                var user = new IdentityUser { UserName = employee.Username, Email = employee.Email };
+                var password = "abasdasdASDASDA124!@";
+                var result = await _userManager.CreateAsync(user, password);
+               
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return new JsonResult(new Dictionary<string, object>
+                    {
+                        { "access_token", GetAccessToken(employee.Email) },
+                        { "id_token", GetIdToken(user) }
+                    });
+                }
+            }
+
+
             var employeeEntity = _mapper.Map<Employee>(employee);
 
             _employeeRepository.CreateEmployee(employeeEntity);
@@ -139,6 +170,62 @@ namespace EmployeesSkillsTracker.Controllers
 
             return NoContent();
 
+        }
+
+
+
+        
+        private static string RandomString()
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_";
+            return new string(Enumerable.Repeat(chars, 10)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        private string GetIdToken(IdentityUser user)
+        {
+            var payload = new Dictionary<string, object>
+              {
+                { "id", user.Id },
+                { "sub", user.Email },
+                { "email", user.Email },
+                { "emailConfirmed", user.EmailConfirmed },
+              };
+                    return GetToken(payload);
+        }
+
+        private string GetToken(Dictionary<string, object> payload)
+        {
+            var secret = _options.SecretKey;
+
+            payload.Add("iss", _options.Issuer);
+            payload.Add("aud", _options.Audience);
+            payload.Add("nbf", ConvertToUnixTimestamp(DateTime.Now));
+            payload.Add("iat", ConvertToUnixTimestamp(DateTime.Now));
+            payload.Add("exp", ConvertToUnixTimestamp(DateTime.Now.AddDays(7)));
+            IJwtAlgorithm algorithm = new HMACSHA256Algorithm();
+            IJsonSerializer serializer = new JsonNetSerializer();
+            IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
+            IJwtEncoder encoder = new JwtEncoder(algorithm, serializer, urlEncoder);
+
+            return encoder.Encode(payload, secret);
+        }
+
+        private string GetAccessToken(string Email)
+        {
+            var payload = new Dictionary<string, object>
+                      {
+                        { "sub", Email },
+                        { "email", Email }
+                      };
+            return GetToken(payload);
+        }
+
+        private static double ConvertToUnixTimestamp(DateTime date)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            TimeSpan diff = date.ToUniversalTime() - origin;
+            return Math.Floor(diff.TotalSeconds);
         }
 
 

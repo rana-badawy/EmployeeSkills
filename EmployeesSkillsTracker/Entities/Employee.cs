@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +25,9 @@ namespace EmployeesSkillsTracker.Entities
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        public string Username { get; set; }
 
         [JsonIgnore]
         public string Password { get; set; }
