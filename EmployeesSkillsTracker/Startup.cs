@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using EmployeesSkillsTracker.DbContexts;
 using EmployeesSkillsTracker.Entities;
 using EmployeesSkillsTracker.Helpers;
 using EmployeesSkillsTracker.Interfaces;
 using EmployeesSkillsTracker.Repositories;
+using EmployeesSkillsTracker.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -17,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EmployeesSkillsTracker
 {
@@ -40,11 +44,30 @@ namespace EmployeesSkillsTracker
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.Configure<JWTSettings>(Configuration.GetSection("JWTSettings"));
+            services.Configure<JWTHelper>(Configuration.GetSection("JWTSettings"));
 
+
+            services.AddHttpContextAccessor();
+            
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ISkillRepository, SkillRepository>();
+            services.AddScoped<IJWTHelper, JWTHelper>();
+            services.AddScoped<IAuthServices, AuthServices>();
 
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ClockSkew = TimeSpan.Zero,
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Keys:Access"]))
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +80,9 @@ namespace EmployeesSkillsTracker
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

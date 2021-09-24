@@ -15,6 +15,7 @@ namespace EmployeesSkillsTracker.DbContexts
         }
 
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<EmployeeSkill> EmployeesSkills { get; set; }
         
@@ -22,11 +23,11 @@ namespace EmployeesSkillsTracker.DbContexts
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 1, FirstName = "a", Username = "a",  LastName ="A", Password="123456",  Email = "a@e.com", PhoneNumber = "123", Salary = 1000, Role = "Developer", YearsOfExperience = 1 });
-            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 2, FirstName = "b", Username = "b", LastName ="A", Password="123456", Email = "b@e.com", PhoneNumber = "456", Salary = 1000, Role = "Developer", YearsOfExperience = 2 });
-            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 3, FirstName = "c", Username = "c", LastName ="A", Password="123456", Email = "c@e.com", PhoneNumber = "789", Salary = 2000, Role = "Project Manager", YearsOfExperience = 2 });
-            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 4, FirstName = "d", Username = "d", LastName ="A", Password="123456", Email = "d@e.com", PhoneNumber = "012", Salary = 3000, Role = "Manager", YearsOfExperience = 3 });
-            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 5, FirstName = "e", Username = "e", LastName ="A", Password="123456", Email = "e@e.com", PhoneNumber = "234", Salary = 4000, Role = "Admin", YearsOfExperience = 2 });
+            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 1, FirstName = "a", Username = "a",  LastName ="A", Password="123456", Email = "a@e.com", PhoneNumber = "123", Salary = 1000, Position = "Developer", YearsOfExperience = 1 , RoleId = 2 });
+            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 2, FirstName = "b", Username = "b", LastName ="A", Password="123456",  Email = "b@e.com", PhoneNumber = "456", Salary = 1000, Position = "Developer", YearsOfExperience = 2 , RoleId = 2 });
+            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 3, FirstName = "c", Username = "c", LastName ="A", Password="123456",  Email = "c@e.com", PhoneNumber = "789", Salary = 2000, Position = "Project Manager", YearsOfExperience = 2, RoleId = 2 });
+            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 4, FirstName = "d", Username = "d", LastName ="A", Password="123456",  Email = "d@e.com", PhoneNumber = "012", Salary = 3000, Position = "Manager", YearsOfExperience = 3, RoleId = 2 });
+            modelBuilder.Entity<Employee>().HasData(new Employee { EmployeeID = 5, FirstName = "e", Username = "e", LastName ="A", Password="123456",  Email = "e@e.com", PhoneNumber = "234", Salary = 4000, Position = "Admin", YearsOfExperience = 2, RoleId = 1 });
 
             modelBuilder.Entity<Skill>().HasData(new Skill { SkillID = 1, Name = "Blue Prism" });
             modelBuilder.Entity<Skill>().HasData(new Skill { SkillID = 2, Name = "UiPath" });
@@ -36,6 +37,11 @@ namespace EmployeesSkillsTracker.DbContexts
             modelBuilder.Entity<Skill>().HasData(new Skill { SkillID = 6, Name = "PowerBI" });
             modelBuilder.Entity<Skill>().HasData(new Skill { SkillID = 7, Name = "PowerApps" });
             modelBuilder.Entity<Skill>().HasData(new Skill { SkillID = 8, Name = "VBA" });
+
+
+            modelBuilder.Entity<Role>().HasData(new Role {RoleId = 1,  Name = "Admin" });
+            modelBuilder.Entity<Role>().HasData(new Role {RoleId = 2, Name = "User" });
+
 
             modelBuilder.Entity<EmployeeSkill>().HasData(new EmployeeSkill { EmployeeSkillID = 1, EmployeeID = 1, SkillID = 1, Level = "Beginner" });
             modelBuilder.Entity<EmployeeSkill>().HasData(new EmployeeSkill { EmployeeSkillID = 2, EmployeeID = 1, SkillID = 2, Level = "Intermediate" });
