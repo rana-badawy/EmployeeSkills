@@ -15,29 +15,27 @@ namespace EmployeesSkillsTracker.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IMapper _mapper;
 
-        public EmployeesController(IEmployeeRepository employeeRepository, IMapper mapper)
+        public EmployeesController(IEmployeeRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
-            _mapper = mapper;
         }
 
         [HttpGet("api/employees")]
-        public ActionResult<IEnumerable<EmployeeDto>> GetEmployees()
+        public ActionResult<IEnumerable<Employee>> GetEmployees()
         {
-            return Ok(_mapper.Map<IEnumerable<EmployeeDto>>(_employeeRepository.GetEmployees()));
+            return Ok(_employeeRepository.GetEmployees());
         }
 
         [HttpGet("api/employees/{employeeId}", Name = "GetEmployee")]
-        public ActionResult<EmployeeDto> GetEmployeeByID(int employeeId)
+        public ActionResult<Employee> GetEmployeeByID(int employeeId)
         {
             var employee = _employeeRepository.GetEmployeeByID(employeeId);
 
             if (employee == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<EmployeeDto>(employee));
+            return Ok(employee);
         }
 
 
@@ -53,18 +51,14 @@ namespace EmployeesSkillsTracker.Controllers
         }
 
         [HttpPost("api/employees")]
-        public ActionResult<EmployeeDto> CreateEmployee(EmployeeDto employee)
+        public ActionResult<Employee> CreateEmployee(Employee employee)
         {
-            var employeeEntity = _mapper.Map<Employee>(employee);
-
-            _employeeRepository.CreateEmployee(employeeEntity);
+            _employeeRepository.CreateEmployee(employee);
             _employeeRepository.Save();
-
-            var createdEmployee = _mapper.Map<EmployeeDto>(employeeEntity);
 
             //Create Temp Password and send it to the email
 
-            return CreatedAtRoute("GetEmployee", new { employeeId = createdEmployee.EmployeeID }, createdEmployee);
+            return CreatedAtRoute("GetEmployee", new { employeeId = employee.EmployeeID }, employee);
         }
 
         [HttpPut("api/employees/{employeeId}")]
@@ -99,7 +93,7 @@ namespace EmployeesSkillsTracker.Controllers
         }
 
         [HttpPost("api/employees/{employeeId}/skills")]
-        public ActionResult<List<Skill>> AddEmployeeSkills(int employeeId, List<EmployeeSkill> employeeSkills)
+        public ActionResult<Employee> AddEmployeeSkills(int employeeId, List<EmployeeSkill> employeeSkills)
         {
             var employee = _employeeRepository.GetEmployeeByID(employeeId);
 
