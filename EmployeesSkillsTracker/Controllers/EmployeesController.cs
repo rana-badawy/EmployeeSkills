@@ -83,7 +83,7 @@ namespace EmployeesSkillsTracker.Controllers
             if (ModelState.IsValid)
             {
 
-                employee.Password = _jWTHelper.CreatePassword("abasdasdASDASDA124!@");
+                employee.Password = _jWTHelper.CreatePassword("123456");
                 _employeeRepository.CreateEmployee(employee);
                 _employeeRepository.Save();
 
@@ -181,6 +181,7 @@ namespace EmployeesSkillsTracker.Controllers
         }
 
         [HttpPost("api/login")]
+        [AllowAnonymous]
         public IActionResult Login([FromForm] string username, [FromForm] string password)
         {
             var response = _authServices.LoginEmployee(username, password);

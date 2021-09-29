@@ -30,35 +30,35 @@ namespace EmployeesSkillsTracker.Migrations
                 keyColumn: "EmployeeID",
                 keyValue: 1,
                 columns: new[] { "FirstName", "LastName", "Password" },
-                values: new object[] { "a", "A", "123456" });
+                values: new object[] { "a", "A", "AQAAAAEAACcQAAAAEEIOHFMUsnlWhRiA3W8wsiPnnFPvb1FbXU6qw+Az5Nme/q9kw5BfypEm4yHT2Rl6ew==" });
 
             migrationBuilder.UpdateData(
                 table: "Employees",
                 keyColumn: "EmployeeID",
                 keyValue: 2,
                 columns: new[] { "FirstName", "LastName", "Password" },
-                values: new object[] { "b", "A", "123456" });
+                values: new object[] { "b", "A", "AQAAAAEAACcQAAAAEEIOHFMUsnlWhRiA3W8wsiPnnFPvb1FbXU6qw+Az5Nme/q9kw5BfypEm4yHT2Rl6ew==" });
 
             migrationBuilder.UpdateData(
                 table: "Employees",
                 keyColumn: "EmployeeID",
                 keyValue: 3,
                 columns: new[] { "FirstName", "LastName", "Password" },
-                values: new object[] { "c", "A", "123456" });
+                values: new object[] { "c", "A", "AQAAAAEAACcQAAAAEEIOHFMUsnlWhRiA3W8wsiPnnFPvb1FbXU6qw+Az5Nme/q9kw5BfypEm4yHT2Rl6ew==" });
 
             migrationBuilder.UpdateData(
                 table: "Employees",
                 keyColumn: "EmployeeID",
                 keyValue: 4,
                 columns: new[] { "FirstName", "LastName", "Password" },
-                values: new object[] { "d", "A", "123456" });
+                values: new object[] { "d", "A", "AQAAAAEAACcQAAAAEEIOHFMUsnlWhRiA3W8wsiPnnFPvb1FbXU6qw+Az5Nme/q9kw5BfypEm4yHT2Rl6ew==" });
 
             migrationBuilder.UpdateData(
                 table: "Employees",
                 keyColumn: "EmployeeID",
                 keyValue: 5,
                 columns: new[] { "FirstName", "LastName", "Password" },
-                values: new object[] { "e", "A", "123456" });
+                values: new object[] { "e", "A", "AQAAAAEAACcQAAAAEEIOHFMUsnlWhRiA3W8wsiPnnFPvb1FbXU6qw+Az5Nme/q9kw5BfypEm4yHT2Rl6ew==" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
