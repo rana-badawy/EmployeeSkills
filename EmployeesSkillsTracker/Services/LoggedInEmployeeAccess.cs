@@ -26,10 +26,12 @@ namespace EmployeesSkillsTracker.Services
             }
 
             var loggedInId = int.Parse(context.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub).Value);
+
             if(loggedInId == requirement.EmployeeId)
             {
                 context.Succeed(requirement);
             }
+
             return Task.CompletedTask;
         }
     }

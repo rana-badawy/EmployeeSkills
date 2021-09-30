@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EmployeesSkillsTracker.Interfaces
+namespace EmployeesSkillsTracker.Interfaces.Repositories
 {
     public interface IEmployeeRepository
     {
@@ -13,6 +13,7 @@ namespace EmployeesSkillsTracker.Interfaces
         public bool EmployeeExists(int employeeId);
 
         public Employee GetEmployeeByID(int employeeID);
+
         public Employee GetEmployeeByUsername(string username);
 
         public Employee GetEmployeeSkills(int employeeId);

@@ -1,6 +1,7 @@
 ﻿using EmployeesSkillsTracker.Entities;
-using EmployeesSkillsTracker.Helpers;
-using EmployeesSkillsTracker.Interfaces;
+using EmployeesSkillsTracker.Interfaces.Repositories;
+using EmployeesSkillsTracker.Interfaces.Helpers;
+using EmployeesSkillsTracker.Interfaces.Services;
 using EmployeesSkillsTracker.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -24,6 +25,8 @@ namespace EmployeesSkillsTracker.Services
             _employeeRepository = employeeRepository;
             _httpContextAccessor = httpContextAccessor;
         }
+
+
         public string GenerateAccessToken(Employee employee)
         {
             var claims = new List<Claim>()
@@ -34,9 +37,12 @@ namespace EmployeesSkillsTracker.Services
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds.ToString(), ClaimValueTypes.Integer),
 
             };
+
             string token = _jWTHelper.GenerateJSONWebToken(claims, "Access");
+
             return token;
         }
+
         public string GenerateRefreshToken(Employee employee)
         {
             var claims = new List<Claim>()
@@ -47,9 +53,9 @@ namespace EmployeesSkillsTracker.Services
             };
 
             string token = _jWTHelper.GenerateJSONWebToken(claims, "Refresh");
+
             return token;
         }
-
 
 
         public TokenResponseDto ValidateRefreshToken(string refreshToken)
@@ -83,11 +89,11 @@ namespace EmployeesSkillsTracker.Services
 
         public ResponseDto<Employee> LoginEmployee(string username, string password)
         {
-            
-
             var user = _employeeRepository.GetEmployeeByUsername(username) ?? throw new UnauthorizedAccessException();
+
             // Password Verification
             var verified = _jWTHelper.VerifyPassword(user.Password, password);
+
             if (!verified)
             {
                 throw new AccessViolationException();
@@ -98,7 +104,6 @@ namespace EmployeesSkillsTracker.Services
             var refreshToken = GenerateRefreshToken(user);
 
             return new ResponseDto<Employee> { AccessToken = accessToken, RefreshToken = refreshToken, responseObject = user };
-
         }
 
     }

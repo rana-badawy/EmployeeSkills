@@ -1,6 +1,6 @@
 ﻿using EmployeesSkillsTracker.DbContexts;
 using EmployeesSkillsTracker.Entities;
-using EmployeesSkillsTracker.Interfaces;
+using EmployeesSkillsTracker.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

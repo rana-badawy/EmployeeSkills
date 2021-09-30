@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EmployeesSkillsTracker.Interfaces
+namespace EmployeesSkillsTracker.Interfaces.Repositories
 {
     public interface ISkillRepository
     {

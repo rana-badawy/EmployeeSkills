@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using EmployeesSkillsTracker.DbContexts;
 using EmployeesSkillsTracker.Entities;
+using EmployeesSkillsTracker.Interfaces.Helpers;
 using EmployeesSkillsTracker.Helpers;
-using EmployeesSkillsTracker.Interfaces;
+using EmployeesSkillsTracker.Interfaces.Repositories;
 using EmployeesSkillsTracker.Repositories;
+using EmployeesSkillsTracker.Interfaces.Services;
 using EmployeesSkillsTracker.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -46,7 +48,6 @@ namespace EmployeesSkillsTracker
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.Configure<JWTHelper>(Configuration.GetSection("JWTSettings"));
-
 
             services.AddHttpContextAccessor();
             
@@ -88,7 +89,6 @@ namespace EmployeesSkillsTracker
 
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.UseEndpoints(endpoints =>
             {

@@ -6,10 +6,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EmployeesSkillsTracker.Entities;
-using EmployeesSkillsTracker.Helpers;
-using EmployeesSkillsTracker.Interfaces;
+using EmployeesSkillsTracker.Interfaces.Repositories;
+using EmployeesSkillsTracker.Interfaces.Helpers;
+using EmployeesSkillsTracker.Interfaces.Services;
 using EmployeesSkillsTracker.Models;
-using EmployeesSkillsTracker.Services;
 using JWT;
 using JWT.Algorithms;
 using JWT.Serializers;
@@ -30,10 +30,8 @@ namespace EmployeesSkillsTracker.Controllers
 
         //private readonly JWTHelper _options;
 
-        public EmployeesController(IEmployeeRepository employeeRepository, 
-                                   /*SignInManager<IdentityUser> signInManager,*/ /*IOptions<JWTHelper> optionsAccessor,*/ 
-                                   IJWTHelper jWTHelper, 
-                                   IAuthServices authServices)
+        public EmployeesController(IEmployeeRepository employeeRepository, IJWTHelper jWTHelper, IAuthServices authServices
+                                   /*SignInManager<IdentityUser> signInManager,*/ /*IOptions<JWTHelper> optionsAccessor,*/)
         {
             _employeeRepository = employeeRepository;
             _jWTHelper = jWTHelper;
@@ -57,6 +55,7 @@ namespace EmployeesSkillsTracker.Controllers
             {
                 throw new UnauthorizedAccessException();
             };
+
             var employee = _employeeRepository.GetEmployeeByID(employeeId);
 
             if (employee == null)
@@ -64,7 +63,6 @@ namespace EmployeesSkillsTracker.Controllers
 
             return Ok(employee);
         }
-
 
         [HttpGet("api/employees/{employeeId}/skills", Name = "GetEmployeeSkills")]
         public ActionResult<Employee> GetEmployeeSkills(int employeeId)
@@ -82,7 +80,6 @@ namespace EmployeesSkillsTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 employee.Password = _jWTHelper.CreatePassword("abasdasdASDASDA124!@");
                 _employeeRepository.CreateEmployee(employee);
                 _employeeRepository.Save();
@@ -90,11 +87,8 @@ namespace EmployeesSkillsTracker.Controllers
                 var accessToken = _authServices.GenerateAccessToken(employee);
                 var refreshToken = _authServices.GenerateRefreshToken(employee);
 
-
-                return Ok(new ResponseDto<Employee> { responseObject = employee, AccessToken = accessToken, RefreshToken = refreshToken });
-                
+                return Ok(new ResponseDto<Employee> { responseObject = employee, AccessToken = accessToken, RefreshToken = refreshToken });     
             }
-
 
             //var employeeEntity = _mapper.Map<Employee>(employee);
 
@@ -177,7 +171,6 @@ namespace EmployeesSkillsTracker.Controllers
             _employeeRepository.Save();
 
             return NoContent();
-
         }
 
         [HttpPost("api/login")]
@@ -185,11 +178,8 @@ namespace EmployeesSkillsTracker.Controllers
         {
             var response = _authServices.LoginEmployee(username, password);
 
-
             return Ok(response);
         }
-
-
 
 
         //private static string RandomString()

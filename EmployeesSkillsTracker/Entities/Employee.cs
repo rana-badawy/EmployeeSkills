@@ -30,7 +30,7 @@ namespace EmployeesSkillsTracker.Entities
         [Required]
         public string Username { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public string Password { get; set; }
 
 
@@ -44,6 +44,7 @@ namespace EmployeesSkillsTracker.Entities
 
         [ForeignKey("Role")]
         public int? RoleId { get; set; } = 1;
+
         public virtual Role Role { get; set; }
 
     }

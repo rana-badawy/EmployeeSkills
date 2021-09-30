@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EmployeesSkillsTracker.Entities;
-using EmployeesSkillsTracker.Interfaces;
+using EmployeesSkillsTracker.Interfaces.Repositories;
 using EmployeesSkillsTracker.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

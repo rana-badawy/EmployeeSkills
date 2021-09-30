@@ -1,4 +1,4 @@
-﻿using EmployeesSkillsTracker.Services;
+﻿using EmployeesSkillsTracker.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
