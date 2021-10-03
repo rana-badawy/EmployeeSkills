@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EmployeesSkillsTracker.Models
 {
-    public class EmployeeDto
+    public class EmployeeWithoutPasswordDto
     {
         public int EmployeeID { get; set; }
 
@@ -17,6 +17,10 @@ namespace EmployeesSkillsTracker.Models
         public string Email { get; set; }
 
         public string Position { get; set; }
+
+        public string Username { get; set; }
+
+        public int Salary { get; set; }
 
         public double YearsOfExperience { get; set; }
     }

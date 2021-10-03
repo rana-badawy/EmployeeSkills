@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EmployeesSkillsTracker.Models
 {
-    public class EmployeeDto
+    public class EmployeeWithSkillsDto
     {
         public int EmployeeID { get; set; }
 
@@ -19,5 +19,7 @@ namespace EmployeesSkillsTracker.Models
         public string Position { get; set; }
 
         public double YearsOfExperience { get; set; }
+
+        public virtual List<EmployeeSkillDto> Skills { get; set; }
     }
 }

@@ -35,7 +35,6 @@ namespace EmployeesSkillsTracker.Services
                 new Claim(ClaimTypes.NameIdentifier, employee.EmployeeID.ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, employee.EmployeeID.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds.ToString(), ClaimValueTypes.Integer),
-
             };
 
             string token = _jWTHelper.GenerateJSONWebToken(claims, "Access");
@@ -48,6 +47,7 @@ namespace EmployeesSkillsTracker.Services
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Role, employee.RoleId.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeID.ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, employee.EmployeeID.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds.ToString(), ClaimValueTypes.Integer),
             };

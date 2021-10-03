@@ -1,92 +1,115 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EmployeesSkillsTracker.Entities;
 using EmployeesSkillsTracker.Interfaces.Repositories;
 using EmployeesSkillsTracker.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeesSkillsTracker.Controllers
 {
     [ApiController]
+    [Authorize]
     public class SkillsController : ControllerBase
     {
         private readonly ISkillRepository _skillRepository;
+        private readonly IMapper _mapper;
 
-        public SkillsController(ISkillRepository skillRepository)
+        public SkillsController(ISkillRepository skillRepository, IMapper mapper)
         {
             _skillRepository = skillRepository;
+            _mapper = mapper;
         }
 
         [HttpGet("api/skills")]
-        public ActionResult<IEnumerable<Skill>> GetSkills()
+        public ActionResult<IEnumerable<SkillDto>> GetSkills()
         {
-            return Ok(_skillRepository.GetSkills());
+            return Ok(_mapper.Map<IEnumerable<SkillDto>>(_skillRepository.GetSkills()));
         }
 
         [HttpGet("api/skills/{skillId}", Name = "GetSkill")]
-        public ActionResult<Skill> GetSkillByID(int skillId)
+        public ActionResult<SkillDto> GetSkillByID(int skillId)
         {
             var skill = _skillRepository.GetSkillByID(skillId);
 
             if (skill == null)
                 return NotFound();
 
-            return Ok(skill);
+            return Ok(_mapper.Map<SkillDto>(skill));
         }
 
         [HttpGet("api/skills/{skillId}/employees")]
-        public ActionResult<Skill> GetSkillEmployees(int skillId)
+        public ActionResult<SkillWithEmployeesDto> GetSkillEmployees(int skillId)
         {
-            var skill = _skillRepository.GetSkillEmployees(skillId);
+            if (int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                var skill = _skillRepository.GetSkillEmployees(skillId);
 
-            if (skill == null)
-                return NotFound();
+                if (skill == null)
+                    return NotFound();
 
-            return Ok(skill);
+                return Ok(_mapper.Map<SkillWithEmployeesDto>(skill));
+            }
+            throw new UnauthorizedAccessException();
         }
 
         [HttpPost("api/skills")]
-        public ActionResult<Skill> CreateSkill(Skill skill)
+        public ActionResult<Skill> CreateSkill(SkillDto skill)
         {
-            _skillRepository.CreateSkill(skill);
-            _skillRepository.Save();
+            if (int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                var skillEntity = _mapper.Map<Skill>(skill);
 
-            return CreatedAtRoute("GetSkill", new { skillId = skill.SkillID }, skill);
+                _skillRepository.CreateSkill(skillEntity);
+                _skillRepository.Save();
+
+                return Ok();
+            }
+            throw new UnauthorizedAccessException();
         }
 
         [HttpPut("api/skills/{skillId}")]
-        public ActionResult UpdateSkill(int skillId, Skill skill)
+        public ActionResult<Skill> UpdateSkill(int skillId, SkillDto skill)
         {
-            if (skill == null)
-                return BadRequest();
+            if (int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                if (skill == null)
+                    return BadRequest();
 
-            if (!_skillRepository.SkillExists(skillId))
-                return NotFound();
+                if (!_skillRepository.SkillExists(skillId))
+                    return NotFound();
 
-            _skillRepository.UpdateSkill(skill);
-            _skillRepository.Save();
+                var skillEntity = _mapper.Map<Skill>(skill);
 
-            var skillEntity = _skillRepository.GetSkillByID(skillId);
+                _skillRepository.UpdateSkill(skillEntity);
+                _skillRepository.Save();
 
-            return Ok(skillEntity);
+                return Ok();
+            }
+            throw new UnauthorizedAccessException();
         }
 
         [HttpDelete("api/skills/{skillId}")]
         public ActionResult DeleteSkill(int skillId)
         {
-            var skill = _skillRepository.GetSkillByID(skillId);
+            if (int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                var skill = _skillRepository.GetSkillByID(skillId);
 
-            if (skill == null)
-                return NotFound();
+                if (skill == null)
+                    return NotFound();
 
-            _skillRepository.DeleteSkill(skill);
-            _skillRepository.Save();
+                _skillRepository.DeleteSkill(skill);
+                _skillRepository.Save();
 
-            return NoContent();
+                return Ok();
+            }
+            throw new UnauthorizedAccessException();
         }
     }
 }

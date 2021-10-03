@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace EmployeesSkillsTracker.Models
 {
-    public class EmployeeDto
+    public class EmployeeFromSkillDto
     {
         public int EmployeeID { get; set; }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }

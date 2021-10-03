@@ -11,6 +11,9 @@ namespace EmployeesSkillsTracker.Profiles
         public EmployeesProfile()
         {
             CreateMap<Entities.Employee, Models.EmployeeDto>().ReverseMap();
+            CreateMap<Entities.Employee, Models.EmployeeWithoutPasswordDto>().ReverseMap();
+            CreateMap<Entities.Employee, Models.EmployeeWithSkillsDto>().ReverseMap();
+            CreateMap<Entities.Employee, Models.EmployeeFromSkillDto>().ReverseMap();
         }
     }
 }

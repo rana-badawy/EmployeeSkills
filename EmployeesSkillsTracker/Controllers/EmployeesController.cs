@@ -22,57 +22,62 @@ using Microsoft.Extensions.Options;
 namespace EmployeesSkillsTracker.Controllers
 {
     [ApiController]
+    [Authorize]
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IJWTHelper _jWTHelper;
         private readonly IAuthServices _authServices;
+        private readonly IMapper _mapper;
 
         //private readonly JWTHelper _options;
 
-        public EmployeesController(IEmployeeRepository employeeRepository, IJWTHelper jWTHelper, IAuthServices authServices
+        public EmployeesController(IEmployeeRepository employeeRepository, IJWTHelper jWTHelper, IAuthServices authServices, IMapper mapper
                                    /*SignInManager<IdentityUser> signInManager,*/ /*IOptions<JWTHelper> optionsAccessor,*/)
         {
             _employeeRepository = employeeRepository;
             _jWTHelper = jWTHelper;
             _authServices = authServices;
+            _mapper = mapper;
             //_options = optionsAccessor.Value;   
         }
 
         [HttpGet("api/employees")]
-        [Authorize]
-        public ActionResult<IEnumerable<Employee>> GetEmployees()
+        public ActionResult<IEnumerable<EmployeeDto>> GetEmployees()
         {
-            return Ok(_employeeRepository.GetEmployees());
+            return Ok(_mapper.Map<IEnumerable<EmployeeDto>>(_employeeRepository.GetEmployees()));
         }
 
         [HttpGet("api/employees/{employeeId}", Name = "GetEmployee")]
-        [Authorize]
-        public ActionResult<Employee> GetEmployeeByID(int employeeId)
+        public ActionResult<EmployeeWithoutPasswordDto> GetEmployeeByID(int employeeId)
         {
-            if (employeeId != int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value)
-                || int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 2)
+            if (employeeId == int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value)
+                || int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
             {
-                throw new UnauthorizedAccessException();
-            };
+                var employee = _employeeRepository.GetEmployeeByID(employeeId);
 
-            var employee = _employeeRepository.GetEmployeeByID(employeeId);
+                if (employee == null)
+                    return NotFound();
 
-            if (employee == null)
-                return NotFound();
-
-            return Ok(employee);
+                return Ok(_mapper.Map<EmployeeWithoutPasswordDto>(employee));   
+            }
+            return Unauthorized();
         }
 
         [HttpGet("api/employees/{employeeId}/skills", Name = "GetEmployeeSkills")]
-        public ActionResult<Employee> GetEmployeeSkills(int employeeId)
+        public ActionResult<EmployeeWithSkillsDto> GetEmployeeSkills(int employeeId)
         {
-            var employee = _employeeRepository.GetEmployeeSkills(employeeId);
+            if (employeeId == int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value)
+                || int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                var employee = _employeeRepository.GetEmployeeSkills(employeeId);
 
-            if (employee == null)
-                return NotFound();
+                if (employee == null)
+                    return NotFound();
 
-            return Ok(employee);
+                return Ok(_mapper.Map<EmployeeWithSkillsDto>(employee));
+            }
+            return Unauthorized();
         }
 
         [HttpPost("api/employees")]
@@ -87,90 +92,114 @@ namespace EmployeesSkillsTracker.Controllers
                 var accessToken = _authServices.GenerateAccessToken(employee);
                 var refreshToken = _authServices.GenerateRefreshToken(employee);
 
-                return Ok(new ResponseDto<Employee> { responseObject = employee, AccessToken = accessToken, RefreshToken = refreshToken });     
+                _employeeRepository.CreateEmployee(employee);
+                _employeeRepository.Save();
+
+                var employeeDto = _mapper.Map<EmployeeWithoutPasswordDto>(employee);
+
+                return Ok(new ResponseDto<EmployeeWithoutPasswordDto> { responseObject = employeeDto, AccessToken = accessToken, RefreshToken = refreshToken });     
             }
 
-            //var employeeEntity = _mapper.Map<Employee>(employee);
+            //Send password to the employee by email
 
-            _employeeRepository.CreateEmployee(employee);
-            _employeeRepository.Save();
-
-            //Create Temp Password and send it to the email
-
-            return CreatedAtRoute("GetEmployee", new { employeeId = employee.EmployeeID }, employee);
+            return BadRequest();
         }
 
         [HttpPut("api/employees/{employeeId}")]
         public ActionResult UpdateEmployee(int employeeId, Employee employee)
         {
-            if (employee == null)
-                return BadRequest();
+            if (employeeId == int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value)
+                || int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                if (employee == null)
+                    return BadRequest();
 
-            if (!_employeeRepository.EmployeeExists(employeeId))
-                return NotFound();
-                
-            _employeeRepository.UpdateEmployee(employee);
-            _employeeRepository.Save();
+                if (!_employeeRepository.EmployeeExists(employeeId))
+                    return NotFound();
 
-            var employeeEntity = _employeeRepository.GetEmployeeByID(employeeId);
+                _employeeRepository.UpdateEmployee(employee);
+                _employeeRepository.Save();
 
-            return Ok(employeeEntity);
+                return Ok();
+            }
+            return Unauthorized();
         }
 
         [HttpDelete("api/employees/{employeeId}")]
         public ActionResult DeleteEmployee(int employeeId)
         {
-            var employee = _employeeRepository.GetEmployeeByID(employeeId);
+            if (int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                var employee = _employeeRepository.GetEmployeeByID(employeeId);
 
-            if (employee == null)
-                return NotFound();
+                if (employee == null)
+                    return NotFound();
 
-            _employeeRepository.DeleteEmployee(employee);
-            _employeeRepository.Save();
+                _employeeRepository.DeleteEmployee(employee);
+                _employeeRepository.Save();
 
-            return NoContent();
+                return Ok();
+            }
+            return Unauthorized();
         }
 
         [HttpPost("api/employees/{employeeId}/skills")]
         public ActionResult<Employee> AddEmployeeSkills(int employeeId, List<EmployeeSkill> employeeSkills)
         {
-            var employee = _employeeRepository.GetEmployeeByID(employeeId);
+            if (employeeId == int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value)
+                || int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                var employee = _employeeRepository.GetEmployeeByID(employeeId);
 
-            if (employee == null)
-                return NotFound();
+                if (employee == null)
+                    return NotFound();
 
-            var updatedEmployee = _employeeRepository.AddEmployeeSkills(employee, employeeSkills);
-            _employeeRepository.Save();
+                var updatedEmployee = _employeeRepository.AddEmployeeSkills(employee, employeeSkills);
+                _employeeRepository.Save();
 
-            return CreatedAtRoute("GetEmployeeSkills", new { employeeId = updatedEmployee.EmployeeID }, updatedEmployee);
+                return Ok();
+            }
+            return Unauthorized();
         }
 
         [HttpDelete("api/employees/{employeeId}/skills/{skillId}")]
         public ActionResult DeleteEmployeeSkill(int employeeId, int skillId)
         {
-            var employeeSkill = _employeeRepository.GetEmployeeSkill(employeeId, skillId);
+            if (employeeId == int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value)
+               || int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                var employeeSkill = _employeeRepository.GetEmployeeSkill(employeeId, skillId);
 
-            if (employeeSkill == null)
-                return NotFound();
+                if (employeeSkill == null)
+                    return NotFound();
 
-            _employeeRepository.DeleteEmployeeSkill(employeeSkill);
-            _employeeRepository.Save();
+                _employeeRepository.DeleteEmployeeSkill(employeeSkill);
+                _employeeRepository.Save();
 
-            return NoContent();
+                return Ok();
+            }
+            return Unauthorized();
         }
 
         [HttpPut("api/employees/{employeeId}/skills/{skillId}")]
-        public IActionResult UpdateEmployeeSkill(int employeeId, int skillId, EmployeeSkill updatedEmployeeSkill)
+        public ActionResult UpdateEmployeeSkill(int employeeId, int skillId, EmployeeSkill updatedEmployeeSkill)
         {
-            var employeeSkill = _employeeRepository.GetEmployeeSkill(employeeId, skillId);
+            if (employeeId == int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value)
+               || int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value) == 1)
+            {
+                var employeeSkill = _employeeRepository.GetEmployeeSkill(employeeId, skillId);
 
-            if (employeeSkill == null)
-                return NotFound();
+                if (employeeSkill == null)
+                    return NotFound();
 
-            _employeeRepository.UpdateEmployeeSkill(updatedEmployeeSkill);
-            _employeeRepository.Save();
+                updatedEmployeeSkill.EmployeeSkillID = employeeSkill.EmployeeSkillID;
 
-            return NoContent();
+                _employeeRepository.UpdateEmployeeSkill(updatedEmployeeSkill);
+                _employeeRepository.Save();
+
+                return Ok();
+            }
+            return Unauthorized();
         }
 
         [HttpPost("api/login")]
@@ -180,6 +209,29 @@ namespace EmployeesSkillsTracker.Controllers
             var response = _authServices.LoginEmployee(username, password);
 
             return Ok(response);
+        }
+
+        [HttpPost("api/employees/{employeeId}/changepassword")]
+        public ActionResult ChangeEmployeePassword(int employeeId, string oldPassword, string newPassword)
+        {
+            if (employeeId == int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value))
+            {
+                var employee = _employeeRepository.GetEmployeeByID(employeeId);
+
+                if (employee == null)
+                    return NotFound();
+
+                if (employee.Password != oldPassword)
+                    return BadRequest();
+
+                employee.Password = _jWTHelper.CreatePassword(newPassword);
+
+                _employeeRepository.UpdateEmployee(employee);
+                _employeeRepository.Save();
+
+                return Ok();
+            }
+            return Unauthorized();
         }
 
 
