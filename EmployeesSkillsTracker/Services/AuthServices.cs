@@ -26,7 +26,6 @@ namespace EmployeesSkillsTracker.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-
         public string GenerateAccessToken(Employee employee)
         {
             var claims = new List<Claim>()
@@ -57,7 +56,6 @@ namespace EmployeesSkillsTracker.Services
             return token;
         }
 
-
         public TokenResponseDto ValidateRefreshToken(string refreshToken)
         {
             var claims = _jWTHelper.ValidateJWTToken(refreshToken, "Refresh") ?? throw new UnauthorizedAccessException();
@@ -85,7 +83,6 @@ namespace EmployeesSkillsTracker.Services
 
             return new TokenValidationResponse(user);
         }
-
 
         public ResponseDto<Employee> LoginEmployee(string username, string password)
         {

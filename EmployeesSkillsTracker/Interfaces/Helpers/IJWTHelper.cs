@@ -9,8 +9,10 @@ namespace EmployeesSkillsTracker.Interfaces.Helpers
 
         IEnumerable<Claim> ValidateJWTToken(string token, string tokenType);
 
-        string CreatePassword(string Password);
+        string CreatePassword(string password = "");
 
         bool VerifyPassword(string hashedPassword, string providedPassword);
+
+        public string GenerateRandomPassword(int length = 8);
     }
 }

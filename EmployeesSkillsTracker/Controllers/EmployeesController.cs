@@ -30,16 +30,12 @@ namespace EmployeesSkillsTracker.Controllers
         private readonly IAuthServices _authServices;
         private readonly IMapper _mapper;
 
-        //private readonly JWTHelper _options;
-
-        public EmployeesController(IEmployeeRepository employeeRepository, IJWTHelper jWTHelper, IAuthServices authServices, IMapper mapper
-                                   /*SignInManager<IdentityUser> signInManager,*/ /*IOptions<JWTHelper> optionsAccessor,*/)
+        public EmployeesController(IEmployeeRepository employeeRepository, IJWTHelper jWTHelper, IAuthServices authServices, IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             _jWTHelper = jWTHelper;
             _authServices = authServices;
             _mapper = mapper;
-            //_options = optionsAccessor.Value;   
         }
 
         [HttpGet("api/employees")]
@@ -85,22 +81,22 @@ namespace EmployeesSkillsTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                employee.Password = _jWTHelper.CreatePassword("123456");
+                var password = _jWTHelper.GenerateRandomPassword();
+
+                employee.Password = _jWTHelper.CreatePassword(password);
+
                 _employeeRepository.CreateEmployee(employee);
                 _employeeRepository.Save();
 
                 var accessToken = _authServices.GenerateAccessToken(employee);
                 var refreshToken = _authServices.GenerateRefreshToken(employee);
 
-                _employeeRepository.CreateEmployee(employee);
-                _employeeRepository.Save();
-
                 var employeeDto = _mapper.Map<EmployeeWithoutPasswordDto>(employee);
+
+                //Send password to the employee by email
 
                 return Ok(new ResponseDto<EmployeeWithoutPasswordDto> { responseObject = employeeDto, AccessToken = accessToken, RefreshToken = refreshToken });     
             }
-
-            //Send password to the employee by email
 
             return BadRequest();
         }
@@ -211,8 +207,8 @@ namespace EmployeesSkillsTracker.Controllers
             return Ok(response);
         }
 
-        [HttpPost("api/employees/{employeeId}/changepassword")]
-        public ActionResult ChangeEmployeePassword(int employeeId, string oldPassword, string newPassword)
+        [HttpPut("api/employees/{employeeId}/changepassword")]
+        public ActionResult ChangeEmployeePassword(int employeeId, [FromForm] string oldPassword, [FromForm] string newPassword)
         {
             if (employeeId == int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value))
             {
@@ -221,8 +217,10 @@ namespace EmployeesSkillsTracker.Controllers
                 if (employee == null)
                     return NotFound();
 
-                if (employee.Password != oldPassword)
-                    return BadRequest();
+                var verified = _jWTHelper.VerifyPassword(employee.Password, oldPassword);
+
+                if (!verified)
+                    return Unauthorized();
 
                 employee.Password = _jWTHelper.CreatePassword(newPassword);
 
@@ -233,61 +231,5 @@ namespace EmployeesSkillsTracker.Controllers
             }
             return Unauthorized();
         }
-
-
-        //private static string RandomString()
-        //{
-        //    Random random = new Random();
-        //    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_";
-        //    return new string(Enumerable.Repeat(chars, 10)
-        //      .Select(s => s[random.Next(s.Length)]).ToArray());
-        //}
-        //private string GetIdToken(IdentityUser user)
-        //{
-        //    var payload = new Dictionary<string, object>
-        //      {
-        //        { "id", user.Id },
-        //        { "sub", user.Email },
-        //        { "email", user.Email },
-        //        { "emailConfirmed", user.EmailConfirmed },
-        //      };
-        //            return GetToken(payload);
-        //}
-
-        //private string GetToken(Dictionary<string, object> payload)
-        //{
-        //    var secret = _options.SecretKey;
-
-        //    payload.Add("iss", _options.Issuer);
-        //    payload.Add("aud", _options.Audience);
-        //    payload.Add("nbf", ConvertToUnixTimestamp(DateTime.Now));
-        //    payload.Add("iat", ConvertToUnixTimestamp(DateTime.Now));
-        //    payload.Add("exp", ConvertToUnixTimestamp(DateTime.Now.AddDays(7)));
-        //    IJwtAlgorithm algorithm = new HMACSHA256Algorithm();
-        //    IJsonSerializer serializer = new JsonNetSerializer();
-        //    IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
-        //    IJwtEncoder encoder = new JwtEncoder(algorithm, serializer, urlEncoder);
-
-        //    return encoder.Encode(payload, secret);
-        //}
-
-        //private string GetAccessToken(string Email)
-        //{
-        //    var payload = new Dictionary<string, object>
-        //              {
-        //                { "sub", Email },
-        //                { "email", Email }
-        //              };
-        //    return GetToken(payload);
-        //}
-
-        //private static double ConvertToUnixTimestamp(DateTime date)
-        //{
-        //    DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        //    TimeSpan diff = date.ToUniversalTime() - origin;
-        //    return Math.Floor(diff.TotalSeconds);
-        //}
-
-
     }
 }
