@@ -66,7 +66,7 @@ namespace EmployeesSkillsTracker.Repositories
 
         public EmployeeSkill GetEmployeeSkill(int employeeId, int skillId)
         {
-            return _appDbContext.EmployeesSkills.FirstOrDefault(s => s.EmployeeID == employeeId & s.SkillID == skillId);
+            return _appDbContext.EmployeesSkills.AsNoTracking().FirstOrDefault(s => s.EmployeeID == employeeId & s.SkillID == skillId);
         }
 
         public void DeleteEmployeeSkill(EmployeeSkill employeeSkill)
