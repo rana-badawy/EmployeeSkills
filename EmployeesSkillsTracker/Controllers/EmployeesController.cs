@@ -29,15 +29,15 @@ namespace EmployeesSkillsTracker.Controllers
         private readonly IJWTHelper _jWTHelper;
         private readonly IAuthServices _authServices;
         private readonly IMapper _mapper;
-        private readonly IEmailHelper _emailHelper;
+        private readonly IEmailService _emailService;
 
-        public EmployeesController(IEmployeeRepository employeeRepository, IJWTHelper jWTHelper, IAuthServices authServices, IMapper mapper, IEmailHelper emailHelper)
+        public EmployeesController(IEmployeeRepository employeeRepository, IJWTHelper jWTHelper, IAuthServices authServices, IMapper mapper, IEmailService emailService)
         {
             _employeeRepository = employeeRepository;
             _jWTHelper = jWTHelper;
             _authServices = authServices;
             _mapper = mapper;
-            _emailHelper = emailHelper;
+            _emailService = emailService;
         }
 
         [HttpGet("api/employees")]
@@ -98,7 +98,7 @@ namespace EmployeesSkillsTracker.Controllers
                 var body = "Dear " + employee.FirstName + ",<br><br>Your account has been created successfully.<br>Your Temporary password is: " + password + "<br><br>Kindly, refer to the following link to change your password<br>http://localhost:5000/api/employees/" + employee.EmployeeID + "/changepassword<br><br>Regards";
 
                 //Send password to the employee by email
-                _emailHelper.sendEmail("Account Created Successfully", employee.Email, body);
+                _emailService.sendEmail("Account Created Successfully", employee.Email, body);
 
                 return Ok(new ResponseDto<EmployeeWithoutPasswordDto> { responseObject = employeeDto, AccessToken = accessToken, RefreshToken = refreshToken });     
             }

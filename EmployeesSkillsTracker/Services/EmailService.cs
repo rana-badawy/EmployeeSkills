@@ -1,17 +1,18 @@
 ﻿using EASendMail;
-using EmployeesSkillsTracker.Interfaces.Helpers;
+using EmployeesSkillsTracker.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmployeesSkillsTracker.Helpers
+namespace EmployeesSkillsTracker.Services
 {
-    public class EmailHelper : IEmailHelper
+    public class EmailService : IEmailService
     {
-        public EmailHelper() { }
+        public EmailService() { }
 
         public void sendEmail(string subject, string to, string body)
         {

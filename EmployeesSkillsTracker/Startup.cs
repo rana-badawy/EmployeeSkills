@@ -55,7 +55,7 @@ namespace EmployeesSkillsTracker
             services.AddScoped<ISkillRepository, SkillRepository>();
             services.AddScoped<IJWTHelper, JWTHelper>();
             services.AddScoped<IAuthServices, AuthServices>();
-            services.AddScoped<IEmailHelper, EmailHelper>();
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
